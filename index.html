@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      index.html – ログイン画面
+
+      このページはユーザーのログインエントリポイントです。ロゴの下にメールアドレスと
+      パスワードを入力するためのシンプルなフォームを用意し、ソーシャルログイン
+      （Google・LINE）を模したボタンも配置しています。
+
+      ファイル構造:
+        ├─ css/styles.css : 共通スタイルシート
+        ├─ js/main.js    : 共通機能（ログインチェック等）
+        └─ js/login.js   : ログイン画面専用の処理
+    -->
+    <title>Project&nbsp;RORO – ログイン</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <!-- Favicon -->
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+  </head>
+  <body class="login-page">
+    <header>
+      <img src="images/logo_roro.png" alt="Project RORO ロゴ" class="logo" />
+    </header>
+    <main>
+      <h1>こんにちは！</h1>
+      <!-- ログインフォーム -->
+      <form id="login-form" autocomplete="off">
+        <div class="input-group">
+          <label for="login-email">メールアドレス</label>
+          <input type="email" id="login-email" placeholder="sample@example.com" required />
+        </div>
+        <div class="input-group">
+          <label for="login-password">パスワード</label>
+          <input type="password" id="login-password" placeholder="パスワード" required />
+        </div>
+        <button type="submit" class="btn primary-btn">ログイン</button>
+      </form>
+      <!-- ソーシャルログインボタン -->
+      <div class="social-login">
+        <button type="button" class="btn google-btn">Googleでログイン</button>
+        <button type="button" class="btn line-btn">LINEでログイン</button>
+      </div>
+      <p>
+        アカウントをお持ちでない場合は
+        <a href="signup.html">こちらから新規登録</a>
+      </p>
+    </main>
+    <script src="js/main.js"></script>
+    <script src="js/login.js"></script>
+  </body>
+</html>
