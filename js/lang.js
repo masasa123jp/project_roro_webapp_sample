@@ -345,6 +345,20 @@ function cycleLang() {
   if (typeof updateCategoryLabels === 'function') {
     updateCategoryLabels();
   }
+
+  // マップページでは、Google Maps API の言語パラメータを反映するためにページをリロードします。
+  // これにより、地図上のラベルも選択した言語に切り替わります。
+  try {
+    const path = window.location.pathname || '';
+    if (path.endsWith('map.html')) {
+      // 少し待ってからリロードして翻訳が適用されるようにする
+      setTimeout(() => {
+        window.location.reload();
+      }, 0);
+    }
+  } catch (err) {
+    /* ignore */
+  }
 }
 
 /**
