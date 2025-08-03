@@ -22,7 +22,7 @@
       <img src="images/logo_roro.png" alt="ロゴ" class="small-logo" />
       <h2 data-i18n-key="map_title">おでかけマップ</h2>
       <button id="lang-toggle-btn" class="lang-toggle" title="Change language">
-        <!-- 言語切替アイコン: デフォルトは switch-language.jpg を使用 -->
+        <!-- 言語切替アイコン: デフォルトは switch-language.png を使用 -->
         <img src="images/switch-language.png" alt="Language" />
       </button>
     </header>
@@ -52,9 +52,20 @@
       (function() {
         // ユーザーの言語設定を取得
         var lang = localStorage.getItem('userLang') || 'ja';
+        // 言語に合わせた地域コードを定義
+        var regionMap = {
+          ja: 'JP',
+          en: 'US',
+          zh: 'CN',
+          ko: 'KR'
+        };
+        var region = regionMap[lang] || 'JP';
         // Google Maps API スクリプトを作成
         var script = document.createElement('script');
-        script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMap&language=' + lang;
+        script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE' +
+          '&callback=initMap' +
+          '&language=' + encodeURIComponent(lang) +
+          '&region=' + encodeURIComponent(region);
         script.async = true;
         script.defer = true;
         document.head.appendChild(script);
