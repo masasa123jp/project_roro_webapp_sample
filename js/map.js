@@ -129,6 +129,23 @@ function initMap() {
     strokeWeight: 1,
     scale: 1
   };
+
+  /*
+   * カスタムアイコンを生成するためのヘルパー関数。
+   * 現在は従来の Marker の icon オプションで利用するため、SVG パスと色を指定します。
+   * @param {string} color 塗りつぶし色
+   * @returns {Object} google.maps.Symbol 互換のオブジェクト
+   */
+  function createMarkerIcon(color) {
+    return {
+      path: markerPath,
+      fillColor: color,
+      fillOpacity: 0.9,
+      strokeColor: '#1F497D',
+      strokeWeight: 1,
+      scale: 1
+    };
+  }
     // グローバル変数 "event" との競合を避けるため、コールバックの引数名を
   // eventItem とする。ブラウザによっては window.event が const として
   // 定義されており、再代入しようとすると "Assignment to constant variable"
@@ -157,24 +174,20 @@ function initMap() {
       facility: '#95A5A6'
     };
     const iconColor = categoryColors[eventItem.category] || '#FFC72C';
-    const markerSymbolForCategory = {
-      path: markerPath,
-      fillColor: iconColor,
-      fillOpacity: 0.9,
-      strokeColor: '#1F497D',
-      strokeWeight: 1,
-      scale: 1
-    };
+    // 従来の google.maps.Marker を使用してマーカーを作成します。
+    // AdvancedMarkerElement は mapId が必要で setVisible メソッドが無いなど、
+    // 本アプリケーションでは適切に動作しないため使用しません。
     const marker = new google.maps.Marker({
-      position,
-      map,
+      position: position,
+      map: map,
       title: eventItem.name,
-      icon: markerSymbolForCategory
+      icon: createMarkerIcon(iconColor)
     });
     bounds.extend(position);
     // markersList に格納
     markersList.push({ marker, category: eventItem.category });
-    marker.addListener('click', () => {
+    // click イベントを登録
+    marker.addListener('click', (...args) => {
       // InfoWindowの内容を動的に生成
       const dateStr = eventItem.date && eventItem.date !== 'nan' ? `<p>${eventItem.date}</p>` : '';
       const addressStr = eventItem.address && eventItem.address !== 'nan' ? `<p>${eventItem.address}</p>` : '';
@@ -218,6 +231,8 @@ function initMap() {
           </div>
         </div>`;
       infoWindow.setContent(content);
+      // InfoWindow を表示
+      // 従来の google.maps.Marker を使用しているため、第二引数にマーカーを渡す形式を使用します。
       infoWindow.open(map, marker);
       // InfoWindow内のボタンにイベントを付与するため、DOMReadyで監視
       google.maps.event.addListenerOnce(infoWindow, 'domready', () => {

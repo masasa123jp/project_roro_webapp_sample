@@ -53,19 +53,24 @@
         // ユーザーの言語設定を取得
         var lang = localStorage.getItem('userLang') || 'ja';
         // 言語に合わせた地域コードを定義
+        // 言語ごとに適切な地域コードを指定します。
+        // 中国語は日本地域の地図タイルを取得するため JP を指定します。
         var regionMap = {
           ja: 'JP',
           en: 'US',
-          zh: 'CN',
+          zh: 'JP',
           ko: 'KR'
         };
         var region = regionMap[lang] || 'JP';
         // Google Maps API スクリプトを作成
         var script = document.createElement('script');
+        // 中国語の場合は zh-CN を使用（簡体字）
+        var langParam = (lang === 'zh' ? 'zh-CN' : lang);
         script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE' +
           '&callback=initMap' +
-          '&language=' + encodeURIComponent(lang) +
-          '&region=' + encodeURIComponent(region);
+          '&language=' + encodeURIComponent(langParam) +
+          '&region=' + encodeURIComponent(region) +
+          '&loading=async';
         script.async = true;
         script.defer = true;
         document.head.appendChild(script);
