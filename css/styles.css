@@ -142,6 +142,16 @@ h2, h3, h4 {
   filter: none;
 }
 
+/* ログインページでは言語切替ボタンを大きく表示 */
+.login-page .lang-toggle {
+  width: 48px;
+  height: 48px;
+}
+.login-page .lang-toggle img {
+  width: 40px;
+  height: 40px;
+}
+
 /* 雑誌グリッドの表紙画像を少し小さめにしてウィンドウに収まるよう調整 */
 .magazine-card img {
   width: 100%;

@@ -74,6 +74,14 @@ const translations = {
     mag_disaster_title: 'ちぃまめの防災アドバイス',
     mag_advice_title: 'ワンポイントアドバイス',
     mag_relax_cafe_title: 'ワンちゃんとくつろげるカフェ'
+    ,login_greeting: 'こんにちは！'
+    ,login_email: 'メールアドレス'
+    ,login_password: 'パスワード'
+    ,login_submit: 'ログイン'
+    ,login_google: 'Googleでログイン'
+    ,login_line: 'LINEでログイン'
+    ,login_no_account: 'アカウントをお持ちでない場合は'
+    ,login_register_link: 'こちらから新規登録'
   },
   en: {
     nav_map: 'Map',
@@ -140,6 +148,14 @@ const translations = {
     mag_disaster_title: "Chiamame's Disaster Advice",
     mag_advice_title: 'One-Point Advice',
     mag_relax_cafe_title: 'Cafés to Relax with Your Dog'
+    ,login_greeting: 'Hello!'
+    ,login_email: 'Email Address'
+    ,login_password: 'Password'
+    ,login_submit: 'Login'
+    ,login_google: 'Login with Google'
+    ,login_line: 'Login with LINE'
+    ,login_no_account: 'If you do not have an account'
+    ,login_register_link: 'Register here'
   },
   zh: {
     nav_map: '地图',
@@ -206,6 +222,14 @@ const translations = {
     mag_disaster_title: 'ちぃまめ的防灾建议',
     mag_advice_title: '小贴士',
     mag_relax_cafe_title: '与爱犬共度的休闲咖啡馆'
+    ,login_greeting: '您好！'
+    ,login_email: '电子邮件'
+    ,login_password: '密码'
+    ,login_submit: '登录'
+    ,login_google: '使用 Google 登录'
+    ,login_line: '使用 LINE 登录'
+    ,login_no_account: '如果您没有账户'
+    ,login_register_link: '请点击这里注册'
   },
   ko: {
     nav_map: '지도',
@@ -272,6 +296,14 @@ const translations = {
     mag_disaster_title: '치마메의 재난 대비 팁',
     mag_advice_title: '한 포인트 조언',
     mag_relax_cafe_title: '반려견과 함께 쉬어갈 수 있는 카페'
+    ,login_greeting: '안녕하세요!'
+    ,login_email: '이메일 주소'
+    ,login_password: '비밀번호'
+    ,login_submit: '로그인'
+    ,login_google: 'Google로 로그인'
+    ,login_line: 'LINE으로 로그인'
+    ,login_no_account: '계정이 없으신가요?'
+    ,login_register_link: '여기에서 등록하세요'
   }
 };
 
