@@ -23,14 +23,15 @@
   <body class="login-page">
     <header>
       <img src="images/logo_roro.png" alt="Project RORO ロゴ" class="logo" />
-      <!-- 言語切替ボタンを追加 -->
-      <button id="lang-toggle-btn" class="lang-toggle" title="Change language">
-        <!-- ログイン画面では大きめの言語アイコンを使用します -->
-        <img src="images/icon_language.png" alt="Language" />
-      </button>
     </header>
     <main>
-      <h1 data-i18n-key="login_greeting">こんにちは！</h1>
+      <!-- 挨拶文と言語切替ボタンを横並びで配置 -->
+      <div class="login-header">
+        <h1 data-i18n-key="login_greeting">こんにちは！</h1>
+        <button id="lang-toggle-btn" class="lang-toggle" title="Change language">
+          <img src="images/icon_language.png" alt="Language" />
+        </button>
+      </div>
       <!-- ログインフォーム -->
       <form id="login-form" autocomplete="off">
         <div class="input-group">

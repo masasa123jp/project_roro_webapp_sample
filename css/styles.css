@@ -146,11 +146,164 @@ h2, h3, h4 {
 .login-page .lang-toggle {
   width: 48px;
   height: 48px;
+  /* Position the toggle next to the logo instead of pushing it to the far right */
+  margin-left: 0.5rem;
+  margin-right: 0;
 }
 .login-page .lang-toggle img {
   width: 40px;
   height: 40px;
 }
+
+/*
+  Responsive layout tweaks for the login page
+
+  The login screen is one of the first pages seen by the user, so it needs to
+  display well across a variety of devices and orientations. Previously the
+  combination of a large logo and generous padding caused important elements
+  (email/password fields and buttons) to be pushed below the visible area on
+  smaller screens or in landscape orientation. To remedy this we switch the
+  page to a flex container, allow the main content to scroll if necessary and
+  constrain the widths of the form and social login buttons. We also scale
+  down the logo and headings on narrow screens.
+*/
+.login-page {
+  /* Use flexbox to distribute header and main vertically and allow main to flex */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/*
+  Layout for the greeting and language toggle on the login page
+
+  The greeting text (h1) and language toggle button should sit on the same
+  horizontal line. This container centers its children and provides a small
+  gap between them. The h1 itself has its margin reset to prevent extra
+  spacing and to align properly with the button.
+*/
+.login-page .login-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.login-page .login-header h1 {
+  margin: 0;
+}
+/* Override default margins for the language toggle within the greeting area */
+.login-page .login-header .lang-toggle {
+  margin-left: 0;
+  margin-right: 0;
+}
+.login-page header {
+  /* Arrange the logo and language toggle horizontally and center them */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0.5rem 0.5rem;
+}
+.login-page main {
+  /* Allow the main content to fill available space and scroll if content overflows */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  width: 100%;
+  /* Reduce the bottom padding since the login page does not use bottom navigation */
+  padding: 1rem;
+}
+
+/* Constrain the width of form elements and buttons on the login page */
+.login-page form,
+.login-page .social-login,
+.login-page p {
+  width: 100%;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Tweak logo and heading sizes for very narrow screens */
+@media (max-width: 600px) {
+  .login-page .logo {
+    /* Limit the logo size to avoid pushing content off screen */
+    max-width: 180px;
+    width: 60%;
+    margin-top: 0.5rem;
+  }
+  .login-page h1 {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+  .login-page main {
+    padding: 0.5rem;
+  }
+}
+
+/*
+  Responsive layout tweaks for the signup page
+
+  Similar to the login page, the signup page can become awkward on small
+  screens because of the long form and generous spacing. We convert the page
+  into a flex container so that the main content can scroll independently of
+  the header, constrain the width of the form and social login buttons,
+  and shrink the logo and heading on narrow viewports. These changes help
+  prevent important fields or buttons from being pushed off the screen on
+  phones in portrait or landscape orientation.
+*/
+.signup-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.signup-page header {
+  flex-shrink: 0;
+  padding: 0.5rem 0.5rem;
+}
+.signup-page main.signup-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  width: 100%;
+  padding: 1rem;
+}
+.signup-page main.signup-container h1 {
+  text-align: center;
+  color: var(--base-color);
+  margin-bottom: 1rem;
+}
+.signup-page #signup-form,
+.signup-page .social-login,
+.signup-page p {
+  width: 100%;
+  max-width: 450px;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (max-width: 600px) {
+  .signup-page .logo {
+    max-width: 180px;
+    width: 60%;
+    margin-top: 0.5rem;
+  }
+  .signup-page h1 {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+  .signup-page main.signup-container {
+    padding: 0.5rem;
+  }
+}
+
 
 /* 雑誌グリッドの表紙画像を少し小さめにしてウィンドウに収まるよう調整 */
 .magazine-card img {
