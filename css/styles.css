@@ -250,8 +250,10 @@ h2, h3, h4 {
 }
 
 .bottom-nav .nav-item.active img {
-  /* 選択中のアイコンはパステルグリーンで表示 */
+  /* 選択中のアイコンはパステルグリーンで表示し、サイズを少し大きくする */
   filter: brightness(0) saturate(100%) invert(73%) sepia(21%) saturate(431%) hue-rotate(85deg) brightness(90%) contrast(88%);
+  width: 32px;
+  height: 32px;
 }
 
 /* マップコンテナ */
@@ -461,7 +463,8 @@ h2, h3, h4 {
 
 #dify-chat .chat-messages {
   flex: 1;
-  max-height: 300px;
+  /* チャットボックスの高さを広げて入力エリアの窮屈さを解消 */
+  max-height: 450px;
   overflow-y: auto;
   padding-right: 0.5rem;
 }
@@ -565,7 +568,17 @@ h2, h3, h4 {
   padding: 1rem;
   box-sizing: border-box;
   height: 100%;
-  overflow-y: auto;
+  /* 背表紙ページでスクロールバーが出ないよう全ページでオーバーフローを隠す */
+  overflow-y: hidden;
+}
+/* 雑誌ページのフォントサイズを調整して読みやすくする */
+.magazine-viewer .page-content h3 {
+  font-size: 1.2rem;
+}
+.magazine-viewer .page-content p,
+.magazine-viewer .page-content li {
+  font-size: 1rem;
+  line-height: 1.5;
 }
 .magazine-viewer .nav-arrow {
   position: absolute;

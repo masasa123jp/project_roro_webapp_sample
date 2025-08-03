@@ -366,7 +366,8 @@ function generateDummyEvents(count) {
   // 基準点：東京都豊島区池袋4丁目付近の概算座標
   const baseLat = 35.7303;
   const baseLng = 139.7099;
-  const radiusKm = 50; // 50km 範囲
+  // ランダム生成ポイントの範囲を狭め、海上に表示されないよう調整
+  const radiusKm = 20; // 20km 範囲に限定
   for (let i = 0; i < count; i++) {
     // 0〜radiusKm の距離を一様分布にするため sqrt を利用
     const distance = Math.sqrt(Math.random()) * radiusKm;
@@ -374,8 +375,17 @@ function generateDummyEvents(count) {
     // 地球半径1度あたり約111.32km として換算
     const deltaLat = (distance * Math.cos(angle)) / 111.32;
     const deltaLng = (distance * Math.sin(angle)) / (111.32 * Math.cos(baseLat * Math.PI / 180));
-    const lat = baseLat + deltaLat;
-    const lng = baseLng + deltaLng;
+    let lat = baseLat + deltaLat;
+    let lng = baseLng + deltaLng;
+    // 海上に配置されないよう、大きく逸脱した場合は基準値に近づける
+    const latMin = baseLat - 0.15;
+    const latMax = baseLat + 0.15;
+    const lngMin = baseLng - 0.15;
+    const lngMax = baseLng + 0.15;
+    if (lat < latMin) lat = latMin + Math.random() * 0.05;
+    if (lat > latMax) lat = latMax - Math.random() * 0.05;
+    if (lng < lngMin) lng = lngMin + Math.random() * 0.05;
+    if (lng > lngMax) lng = lngMax - Math.random() * 0.05;
     results.push({
       name: `ペット関連施設 ${i + 1}`,
       date: '',

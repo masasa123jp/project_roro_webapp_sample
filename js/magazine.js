@@ -23,11 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const rect = book.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
-    // 右側クリック: 次へ、それ以外: 前へ
+    // 右側クリック: 次へ。それ以外: 前へ。
+    // 最終ページ（背表紙）では右側クリックしても次へ進まないようにする
+    const total = currentIssuePages.length;
     if (clickX > rect.width / 2) {
-      flipNext();
+      if (currentPageIndex < total - 1) {
+        flipNext();
+      }
     } else {
-      flipBack();
+      if (currentPageIndex > 0) {
+        flipBack();
+      }
     }
   });
   // 雑誌カードのクリックハンドラを設定
