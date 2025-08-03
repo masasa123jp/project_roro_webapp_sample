@@ -15,6 +15,7 @@
   --light-bg: #F9F9F9;
   --text-color: #333333;
   --border-radius: 8px;
+  /* ボトムナビゲーションの高さを広げてアクティブアイコン(60px)が収まるよう調整 */
   --nav-height: 60px;
   /* 追加: フォントやボタンの見た目の調整用のCSS変数 */
   --font-family: 'Yu Gothic', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
@@ -251,7 +252,7 @@ h2, h3, h4 {
 }
 
 .bottom-nav .nav-item.active img {
-  /* 選択中のアイコンは少し大きく表示し、色を塗りつぶさないようフィルタを無効化する */
+  /* 選択中のアイコンは大きく表示し、色を塗りつぶさないようフィルタを無効化する */
   filter: none;
   width: 60px;
   height: 60px;
