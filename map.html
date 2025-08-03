@@ -22,7 +22,7 @@
       <img src="images/logo_roro.png" alt="ロゴ" class="small-logo" />
       <h2 data-i18n-key="map_title">おでかけマップ</h2>
       <button id="lang-toggle-btn" class="lang-toggle" title="Change language">
-        <img src="images/icon_language.png" alt="Language" />
+        <img src="images/switch-language.png" alt="Language" />
       </button>
     </header>
     <main id="map-container">
@@ -46,10 +46,18 @@
     <!-- 事前にイベントデータをグローバル変数に読み込む -->
     <script src="data/events.js"></script>
     <script src="js/map.js"></script>
-    <!--
-      Google Maps JavaScript API
-      実際の運用時には YOUR_API_KEY_HERE を有効な API キーに置き換えてください。
-    -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMap"></script>
+    <!-- Google Maps API を言語設定に応じて動的にロード -->
+    <script>
+      (function() {
+        // ユーザーの言語設定を取得
+        var lang = localStorage.getItem('userLang') || 'ja';
+        // Google Maps API スクリプトを作成
+        var script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMap&language=' + lang;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+      })();
+    </script>
   </body>
 </html>

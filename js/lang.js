@@ -39,6 +39,26 @@ const translations = {
     chat_placeholder: 'メッセージを入力...',
     reset_view: '周辺表示'
     ,
+    /* カテゴリ名称 */
+    cat_event: 'イベント',
+    cat_restaurant: 'レストラン',
+    cat_hotel: 'ホテル',
+    cat_activity: 'アクティビティ',
+    cat_museum: '美術館・博物館',
+    cat_facility: '施設',
+    /* 保存メニューとリスト種別 */
+    save_favorite: 'お気に入り',
+    save_want: '行ってみたい',
+    save_plan: '旅行プラン',
+    save_star: 'スター付き',
+    list_favorite: 'お気に入り',
+    list_want: '行ってみたい',
+    list_plan: '旅行プラン',
+    list_star: 'スター付き',
+    /* インフォウィンドウ関連 */
+    view_details: '詳細を見る',
+    saved_msg: 'リストに保存しました',
+    already_saved_msg: '既にこのリストに登録済みです'
     /* Magazine specific translations */
     mag_issue_june: '2025年6月号',
     mag_theme_june: '犬と梅雨のおうち時間',
@@ -85,6 +105,26 @@ const translations = {
     chat_placeholder: 'Enter your message...',
     reset_view: 'Reset View'
     ,
+    /* Category names */
+    cat_event: 'Events',
+    cat_restaurant: 'Restaurants',
+    cat_hotel: 'Hotels',
+    cat_activity: 'Activities',
+    cat_museum: 'Museums',
+    cat_facility: 'Facilities',
+    /* Save menu and list labels */
+    save_favorite: 'Favorite',
+    save_want: 'Want to Visit',
+    save_plan: 'Travel Plan',
+    save_star: 'Starred',
+    list_favorite: 'Favorite',
+    list_want: 'Want to Visit',
+    list_plan: 'Travel Plan',
+    list_star: 'Starred',
+    /* InfoWindow */
+    view_details: 'View details',
+    saved_msg: 'Added to list',
+    already_saved_msg: 'Already registered in this list'
     /* Magazine translations */
     mag_issue_june: 'June 2025 Issue',
     mag_theme_june: 'Indoor Fun with Dogs in the Rainy Season',
@@ -131,6 +171,26 @@ const translations = {
     chat_placeholder: '输入您的信息...',
     reset_view: '重置视图'
     ,
+    /* 分类名称 */
+    cat_event: '活动',
+    cat_restaurant: '餐厅',
+    cat_hotel: '酒店',
+    cat_activity: '活动',
+    cat_museum: '美术馆·博物馆',
+    cat_facility: '设施',
+    /* 保存菜单及列表标签 */
+    save_favorite: '收藏',
+    save_want: '想去',
+    save_plan: '旅行计划',
+    save_star: '星标',
+    list_favorite: '收藏',
+    list_want: '想去',
+    list_plan: '旅行计划',
+    list_star: '星标',
+    /* 信息窗口 */
+    view_details: '查看详情',
+    saved_msg: '已添加到列表',
+    already_saved_msg: '已在此列表中注册'
     /* 杂志相关翻译 */
     mag_issue_june: '2025年6月刊',
     mag_theme_june: '雨季与狗狗的室内时光',
@@ -177,6 +237,26 @@ const translations = {
     chat_placeholder: '메시지를 입력하세요...',
     reset_view: '주변 표시'
     ,
+    /* 카테고리 명 */
+    cat_event: '이벤트',
+    cat_restaurant: '레스토랑',
+    cat_hotel: '호텔',
+    cat_activity: '활동',
+    cat_museum: '미술관·박물관',
+    cat_facility: '시설',
+    /* 저장 메뉴 및 리스트 라벨 */
+    save_favorite: '즐겨찾기',
+    save_want: '가보고 싶다',
+    save_plan: '여행 계획',
+    save_star: '별표',
+    list_favorite: '즐겨찾기',
+    list_want: '가보고 싶다',
+    list_plan: '여행 계획',
+    list_star: '별표',
+    /* 인포 윈도우 */
+    view_details: '자세히 보기',
+    saved_msg: '리스트에 추가되었습니다',
+    already_saved_msg: '이미 이 목록에 등록되어 있습니다'
     /* 잡지 관련 번역 */
     mag_issue_june: '2025년 6월호',
     mag_theme_june: '장마철 반려견과 실내 생활',

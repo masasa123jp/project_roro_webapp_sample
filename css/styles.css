@@ -251,8 +251,8 @@ h2, h3, h4 {
 }
 
 .bottom-nav .nav-item.active img {
-  /* 選択中のアイコンはパステルグリーンで表示し、サイズを少し大きくする */
-  filter: brightness(0) saturate(100%) invert(73%) sepia(21%) saturate(431%) hue-rotate(85deg) brightness(90%) contrast(88%);
+  /* 選択中のアイコンはサイズのみ大きくし、色を塗りつぶさないようフィルタを無効化する */
+  filter: none;
   width: 32px;
   height: 32px;
 }

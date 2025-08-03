@@ -107,9 +107,10 @@ function initMap() {
   infoWindow = new google.maps.InfoWindow();
   // data/events.js にて定義された eventsData を利用してマーカーを生成
   const localEvents = Array.isArray(window.eventsData) ? window.eventsData.slice() : [];
-  // 池袋4丁目付近にダミーの施設を生成し、マーカーとして表示するために配列に追加
-  // 50km 圏内に200件のペット関連施設をランダムに配置する。
-  const dummyEvents = generateDummyEvents(200);
+    // 池袋4丁目付近にダミーの施設を生成し、マーカーとして表示するために配列に追加
+    // 200 件のダミー施設を生成する。generateDummyEvents では正規分布に近い乱数を利用
+    // し、都心に近いほど密度が高くなるよう調整しています。
+    const dummyEvents = generateDummyEvents(200);
   // const 配列は再代入できないが、内容の push は可能
   localEvents.push(...dummyEvents);
   if (localEvents.length === 0) {
@@ -128,22 +129,23 @@ function initMap() {
     strokeWeight: 1,
     scale: 1
   };
-  // グローバル変数 "event" との競合を避けるため、コールバックの引数名を
+    // グローバル変数 "event" との競合を避けるため、コールバックの引数名を
   // eventItem とする。ブラウザによっては window.event が const として
   // 定義されており、再代入しようとすると "Assignment to constant variable"
   // エラーが発生する可能性があるためである。
-  localEvents.forEach((eventItem, index) => {
+    localEvents.forEach((eventItem, index) => {
     const position = { lat: eventItem.lat, lng: eventItem.lon };
-    // カテゴリを割り当て。既存のイベントには 'event' を設定し、ダミーにはランダムカテゴリを設定
-    if (!eventItem.category) {
-      if (index < (window.eventsData ? window.eventsData.length : 0)) {
-        eventItem.category = 'event';
-      } else {
-        // ランダムにカテゴリを選択（eventを除外）
-        const catOptions = ['restaurant','hotel','activity','museum','transport','pharmacy','atm','facility'];
-        eventItem.category = catOptions[Math.floor(Math.random() * catOptions.length)];
-      }
-    }
+        // カテゴリを割り当て。既存のイベントには 'event' を設定し、ダミーにはランダムカテゴリを設定
+        if (!eventItem.category) {
+          if (index < (window.eventsData ? window.eventsData.length : 0)) {
+            eventItem.category = 'event';
+          } else {
+            // ランダムにカテゴリを選択（eventを除外）。
+            // 交通機関・薬局・ATM カテゴリは仕様により除外しました。
+            const catOptions = ['restaurant','hotel','activity','museum','facility'];
+            eventItem.category = catOptions[Math.floor(Math.random() * catOptions.length)];
+          }
+        }
     // カテゴリ別アイコン色を決定
     const categoryColors = {
       event: '#FFC72C',
@@ -151,9 +153,7 @@ function initMap() {
       hotel: '#8E44AD',
       activity: '#3498DB',
       museum: '#27AE60',
-      transport: '#2C3E50',
-      pharmacy: '#F39C12',
-      atm: '#16A085',
+      // 削除対象カテゴリ（transport, pharmacy, atm）は定義しません
       facility: '#95A5A6'
     };
     const iconColor = categoryColors[eventItem.category] || '#FFC72C';
@@ -187,17 +187,34 @@ function initMap() {
           <div class="save-option" data-list="plan" style="cursor:pointer;padding:0.2rem 0.4rem;display:flex;align-items:center;gap:0.3rem;"><span>🧳</span><span>旅行プラン</span></div>
           <div class="save-option" data-list="star" style="cursor:pointer;padding:0.2rem 0.4rem;display:flex;align-items:center;gap:0.3rem;"><span>⭐</span><span>スター付き</span></div>
         </div>`;
+      // 翻訳辞書から各テキストを取得
+      const lang = typeof getUserLang === 'function' ? getUserLang() : 'ja';
+      const t = (window.translations && window.translations[lang]) || {};
+      const saveLabel = t.save || '保存';
+      const viewDetailsLabel = t.view_details || '詳細を見る';
+      const saveFavorite = t.save_favorite || 'お気に入り';
+      const saveWant = t.save_want || '行ってみたい';
+      const savePlan = t.save_plan || '旅行プラン';
+      const saveStar = t.save_star || 'スター付き';
+      const menuHtmlTrans = `
+        <div class="save-menu" style="display:none;position:absolute;top:110%;left:0;background:#fff;border:1px solid #ccc;border-radius:6px;padding:0.4rem;box-shadow:0 2px 6px rgba(0,0,0,0.2);width:130px;font-size:0.8rem;">
+          <div class="save-option" data-list="favorite" style="cursor:pointer;padding:0.2rem 0.4rem;display:flex;align-items:center;gap:0.3rem;"><span>❤️</span><span>${saveFavorite}</span></div>
+          <div class="save-option" data-list="want" style="cursor:pointer;padding:0.2rem 0.4rem;display:flex;align-items:center;gap:0.3rem;"><span>🚩</span><span>${saveWant}</span></div>
+          <div class="save-option" data-list="plan" style="cursor:pointer;padding:0.2rem 0.4rem;display:flex;align-items:center;gap:0.3rem;"><span>🧳</span><span>${savePlan}</span></div>
+          <div class="save-option" data-list="star" style="cursor:pointer;padding:0.2rem 0.4rem;display:flex;align-items:center;gap:0.3rem;"><span>⭐</span><span>${saveStar}</span></div>
+        </div>`;
+      const linkHtml = linkStr ? `<p><a href="${eventItem.url}" target="_blank" rel="noopener">${viewDetailsLabel}</a></p>` : '';
       const content = `
         <div class="info-content" style="position:relative;">
           <h3 style="margin:0 0 0.2rem 0;">${eventItem.name}</h3>
           ${dateStr}
           ${addressStr}
-          ${linkStr}
+          ${linkHtml}
           <div class="save-wrapper" style="position:relative;display:inline-block;margin-top:0.5rem;">
             <button class="save-btn" data-index="${index}" style="background-color:transparent;border:none;color:#1F497D;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;gap:0.3rem;">
-              <span class="save-icon">🔖</span><span>保存</span>
+              <span class="save-icon">🔖</span><span>${saveLabel}</span>
             </button>
-            ${menuHtml}
+            ${menuHtmlTrans}
           </div>
         </div>`;
       infoWindow.setContent(content);
@@ -221,6 +238,8 @@ function initMap() {
             });
           });
         }
+        // 吹き出し内に動的に挿入した要素にも翻訳を適用する
+        if (typeof applyTranslations === 'function') applyTranslations();
       });
     });
   });
@@ -287,22 +306,34 @@ function createCategoryButtons() {
   const bar = document.getElementById('category-bar');
   if (!bar) return;
   // 定義したカテゴリリスト
+  // 対応カテゴリの一覧。表示文字列は翻訳辞書から取得します。
   const cats = [
-    { key: 'event', label: 'イベント', emoji: '🎪' },
-    { key: 'restaurant', label: 'レストラン', emoji: '🍴' },
-    { key: 'hotel', label: 'ホテル', emoji: '🏨' },
-    { key: 'activity', label: 'アクティビティ', emoji: '🎠' },
-    { key: 'museum', label: '美術館・博物館', emoji: '🏛️' },
-    { key: 'transport', label: '交通機関', emoji: '🚉' },
-    { key: 'pharmacy', label: '薬局', emoji: '💊' },
-    { key: 'atm', label: 'ATM', emoji: '🏧' },
-    { key: 'facility', label: '施設', emoji: '🏢' }
+    { key: 'event', emoji: '🎪' },
+    { key: 'restaurant', emoji: '🍴' },
+    { key: 'hotel', emoji: '🏨' },
+    { key: 'activity', emoji: '🎠' },
+    { key: 'museum', emoji: '🏛️' },
+    { key: 'facility', emoji: '🏢' }
   ];
   cats.forEach((cat) => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn';
     btn.setAttribute('data-category', cat.key);
-    btn.innerHTML = `<span>${cat.emoji}</span><span>${cat.label}</span>`;
+    const emojiSpan = document.createElement('span');
+    emojiSpan.textContent = cat.emoji;
+    const labelSpan = document.createElement('span');
+    // 翻訳キーを設定して applyTranslations で更新できるようにする
+    const i18nKey = 'cat_' + cat.key;
+    labelSpan.setAttribute('data-i18n-key', i18nKey);
+    // 初期表示を設定（ユーザー言語に合わせる）
+    try {
+      const lang = typeof getUserLang === 'function' ? getUserLang() : 'ja';
+      labelSpan.textContent = (window.translations && window.translations[lang] && window.translations[lang][i18nKey]) || cat.key;
+    } catch (e) {
+      labelSpan.textContent = cat.key;
+    }
+    btn.appendChild(emojiSpan);
+    btn.appendChild(labelSpan);
     btn.addEventListener('click', () => {
       const key = btn.getAttribute('data-category');
       if (btn.classList.contains('active')) {
@@ -316,6 +347,8 @@ function createCategoryButtons() {
     });
     bar.appendChild(btn);
   });
+  // 初期化後に翻訳を適用してボタンラベルを更新
+  if (typeof applyTranslations === 'function') applyTranslations();
 }
 
 /**
@@ -350,9 +383,22 @@ function addToFavorites(eventItem, listType = 'favorite') {
     const itemToSave = { ...eventItem, listType };
     favorites.push(itemToSave);
     localStorage.setItem('favorites', JSON.stringify(favorites));
-    alert('リストに保存しました');
+    // 翻訳されたメッセージを表示
+    try {
+      const lang = typeof getUserLang === 'function' ? getUserLang() : 'ja';
+      const t = (window.translations && window.translations[lang]) || {};
+      alert(t.saved_msg || 'リストに保存しました');
+    } catch (e) {
+      alert('リストに保存しました');
+    }
   } else {
-    alert('既にこのリストに登録済みです');
+    try {
+      const lang2 = typeof getUserLang === 'function' ? getUserLang() : 'ja';
+      const t2 = (window.translations && window.translations[lang2]) || {};
+      alert(t2.already_saved_msg || '既にこのリストに登録済みです');
+    } catch (e) {
+      alert('既にこのリストに登録済みです');
+    }
   }
 }
 
@@ -366,35 +412,27 @@ function generateDummyEvents(count) {
   // 基準点：東京都豊島区池袋4丁目付近の概算座標
   const baseLat = 35.7303;
   const baseLng = 139.7099;
-  // ランダム生成ポイントの範囲を狭め、海上に表示されないよう調整
-  const radiusKm = 20; // 20km 範囲に限定
+  // 国道16号線内の緯度経度境界（東京周辺）
+  const latLowerBound = 35.5;
+  const latUpperBound = 35.9;
+  const lngLowerBound = 139.2;
+  const lngUpperBound = 139.9;
+  // 正規分布に近い乱数を生成する関数（ボックス＝ミュラー法）
+  function gaussianRandom() {
+    let u = 0, v = 0;
+    while (u === 0) u = Math.random(); // 0 にならないように
+    while (v === 0) v = Math.random();
+    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+  }
   for (let i = 0; i < count; i++) {
-    // 0〜radiusKm の距離を一様分布にするため sqrt を利用
-    const distance = Math.sqrt(Math.random()) * radiusKm;
-    const angle = Math.random() * 2 * Math.PI;
-    // 地球半径1度あたり約111.32km として換算
-    const deltaLat = (distance * Math.cos(angle)) / 111.32;
-    const deltaLng = (distance * Math.sin(angle)) / (111.32 * Math.cos(baseLat * Math.PI / 180));
-    let lat = baseLat + deltaLat;
-    let lng = baseLng + deltaLng;
-    // 海上に配置されないよう、大きく逸脱した場合は基準値に近づける
-    const latMin = baseLat - 0.15;
-    const latMax = baseLat + 0.15;
-    const lngMin = baseLng - 0.15;
-    const lngMax = baseLng + 0.15;
-    if (lat < latMin) lat = latMin + Math.random() * 0.05;
-    if (lat > latMax) lat = latMax - Math.random() * 0.05;
-    if (lng < lngMin) lng = lngMin + Math.random() * 0.05;
-    if (lng > lngMax) lng = lngMax - Math.random() * 0.05;
-    // 国道16号線内に収まるようさらに範囲を絞る（東京西側の陸地）
-    const latLowerBound = 35.5;
-    const latUpperBound = 35.9;
-    const lngLowerBound = 139.2;
-    const lngUpperBound = 139.9;
-    if (lat < latLowerBound) lat = latLowerBound + Math.random() * 0.1;
-    if (lat > latUpperBound) lat = latUpperBound - Math.random() * 0.1;
-    if (lng < lngLowerBound) lng = lngLowerBound + Math.random() * 0.1;
-    if (lng > lngUpperBound) lng = lngUpperBound - Math.random() * 0.1;
+    // ガウシアン分布を用いて中心から緩やかに散布
+    let lat = baseLat + gaussianRandom() * 0.05; // 約5km程度の分散
+    let lng = baseLng + gaussianRandom() * 0.06; // 経度方向の分散をやや広げる
+    // 国道16号線内に収まるよう境界チェックを行い、外れた場合は境界内にクランプする
+    if (lat < latLowerBound) lat = latLowerBound + Math.random() * 0.05;
+    if (lat > latUpperBound) lat = latUpperBound - Math.random() * 0.05;
+    if (lng < lngLowerBound) lng = lngLowerBound + Math.random() * 0.05;
+    if (lng > lngUpperBound) lng = lngUpperBound - Math.random() * 0.05;
     results.push({
       name: `ペット関連施設 ${i + 1}`,
       date: '',

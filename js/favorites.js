@@ -45,22 +45,33 @@ document.addEventListener('DOMContentLoaded', () => {
       const badge = document.createElement('span');
       badge.style.marginRight = '0.4rem';
       badge.style.fontSize = '0.9rem';
-      // アイコンとテキストを設定
-      switch (ev.listType) {
-        case 'favorite':
-          badge.textContent = '❤️ お気に入り';
-          break;
-        case 'want':
-          badge.textContent = '🚩 行ってみたい';
-          break;
-        case 'plan':
-          badge.textContent = '🧳 旅行プラン';
-          break;
-        case 'star':
-          badge.textContent = '⭐ スター付き';
-          break;
-        default:
-          badge.textContent = '';
+      // 翻訳辞書を用いてラベルを設定
+      try {
+        const lang = typeof getUserLang === 'function' ? getUserLang() : 'ja';
+        const t = (window.translations && window.translations[lang]) || {};
+        const key = 'list_' + ev.listType;
+        const baseLabel = t[key] || '';
+        if (baseLabel) {
+          // アイコンを選択
+          let icon = '';
+          switch (ev.listType) {
+            case 'favorite': icon = '❤️'; break;
+            case 'want': icon = '🚩'; break;
+            case 'plan': icon = '🧳'; break;
+            case 'star': icon = '⭐'; break;
+            default: icon = '';
+          }
+          badge.textContent = `${icon} ${baseLabel}`;
+        }
+      } catch (e) {
+        // フォールバック: 日本語で表示
+        switch (ev.listType) {
+          case 'favorite': badge.textContent = '❤️ お気に入り'; break;
+          case 'want': badge.textContent = '🚩 行ってみたい'; break;
+          case 'plan': badge.textContent = '🧳 旅行プラン'; break;
+          case 'star': badge.textContent = '⭐ スター付き'; break;
+          default: badge.textContent = '';
+        }
       }
       if (badge.textContent) detailsDiv.appendChild(badge);
     }
