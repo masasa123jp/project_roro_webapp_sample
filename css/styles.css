@@ -137,8 +137,8 @@ h2, h3, h4 {
   width: 28px;
   height: 28px;
   object-fit: contain;
-  /* ダークなヘッダー上でも目立つように白色フィルタを適用 */
-  filter: brightness(0) invert(1);
+  /* ダークなヘッダー上でもオリジナルの色で表示するためフィルタを無効化 */
+  filter: none;
 }
 
 /* 雑誌グリッドの表紙画像を少し小さめにしてウィンドウに収まるよう調整 */
@@ -251,10 +251,10 @@ h2, h3, h4 {
 }
 
 .bottom-nav .nav-item.active img {
-  /* 選択中のアイコンはサイズのみ大きくし、色を塗りつぶさないようフィルタを無効化する */
+  /* 選択中のアイコンは少し大きく表示し、色を塗りつぶさないようフィルタを無効化する */
   filter: none;
-  width: 32px;
-  height: 32px;
+  width: 60px;
+  height: 60px;
 }
 
 /* マップコンテナ */

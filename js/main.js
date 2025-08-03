@@ -62,6 +62,21 @@ document.addEventListener('DOMContentLoaded', () => {
       location.href = 'map.html';
     }
   }
+
+  // ヘッダーのロゴクリック時の遷移処理
+  // small-logo クラスを持つロゴ画像がクリックされたら、
+  // セッションが存在する場合は map.html へ、そうでなければ index.html へ遷移する。
+  const logoEl = document.querySelector('.small-logo');
+  if (logoEl) {
+    logoEl.style.cursor = 'pointer';
+    logoEl.addEventListener('click', () => {
+      if (isLoggedIn()) {
+        location.href = 'map.html';
+      } else {
+        location.href = 'index.html';
+      }
+    });
+  }
 });
 
 /**
