@@ -22,7 +22,7 @@
       <img src="images/logo_roro.png" alt="ロゴ" class="small-logo" />
       <h2 data-i18n-key="map_title">おでかけマップ</h2>
       <button id="lang-toggle-btn" class="lang-toggle" title="Change language">
-        <!-- 言語切替アイコン: デフォルトは switch-language.png を使用 -->
+        <!-- 言語切替アイコン: 拡張子を .png に変更しました -->
         <img src="images/switch-language.png" alt="Language" />
       </button>
     </header>
@@ -47,26 +47,24 @@
     <!-- 事前にイベントデータをグローバル変数に読み込む -->
     <script src="data/events.js"></script>
     <script src="js/map.js"></script>
-    <!-- Google Maps API を言語設定に応じて動的にロード -->
+    <!-- 言語に応じてマップAPIを動的にロード -->
     <script>
       (function() {
-        // ユーザーの言語設定を取得
+        // 現在の言語設定を取得
         var lang = localStorage.getItem('userLang') || 'ja';
-        // 言語に合わせた地域コードを定義
-        // 言語ごとに適切な地域コードを指定します。
-        // 中国語は日本地域の地図タイルを取得するため JP を指定します。
+        // Google Maps API を言語ごとに読み込みます。中国語モードも Google Maps を使用します。
         var regionMap = {
           ja: 'JP',
           en: 'US',
-          zh: 'JP',
+          zh: 'CN',
           ko: 'KR'
         };
         var region = regionMap[lang] || 'JP';
-        // Google Maps API スクリプトを作成
+        // Google Maps の言語コードは zh-CN / ja / en / ko などになります。
+        var langParam = lang === 'zh' ? 'zh-CN' : lang;
         var script = document.createElement('script');
-        // 中国語の場合は zh-CN を使用（簡体字）
-        var langParam = (lang === 'zh' ? 'zh-CN' : lang);
-        script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE' +
+        script.src =
+          'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE' +
           '&callback=initMap' +
           '&language=' + encodeURIComponent(langParam) +
           '&region=' + encodeURIComponent(region) +

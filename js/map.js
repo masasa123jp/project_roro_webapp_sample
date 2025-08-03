@@ -17,9 +17,17 @@ const selectedCategories = new Set();
 // eventsData 変数は data/events.js でグローバルに提供されます。
 
 /**
- * Google Mapsの初期化関数。API読み込み時にコールバックされます。
+ * Google Maps の初期化関数。API読み込み時にコールバックされます。
+ * 日本語・英語・韓国語のモードでは Google Maps を使用します。
  */
-function initMap() {
+function initGoogleMap() {
+  // Google Maps ライブラリが読み込まれているかチェック
+  // ネットワークの問題や API キーの未設定により google オブジェクトが存在しない場合、
+  // ここで処理を中断してエラーメッセージを出力します。
+  if (typeof google === 'undefined' || !google.maps) {
+    console.error('Google Maps API is not loaded or google is undefined.');
+    return;
+  }
   // ログイン状態を確認
   requireLogin();
   // デフォルトの中心（東京駅周辺）
@@ -372,11 +380,32 @@ function createCategoryButtons() {
 function updateMarkerVisibility() {
   // selectedCategories が空の場合は全て表示
   markersList.forEach((item) => {
-    if (selectedCategories.size === 0) {
-      item.marker.setVisible(true);
-    } else {
-      const visible = selectedCategories.has(item.category);
+    // true の場合は表示、false の場合は非表示
+    const visible = selectedCategories.size === 0 || selectedCategories.has(item.category);
+    // Google Maps Marker には setVisible、HERE Marker には setVisibility が存在します
+    if (item.marker && typeof item.marker.setVisible === 'function') {
       item.marker.setVisible(visible);
+    } else if (item.marker && typeof item.marker.setVisibility === 'function') {
+      item.marker.setVisibility(visible);
+    } else {
+      // それ以外の場合は単純にマップへの追加・削除で対応
+      try {
+        if (visible) {
+          if (typeof map.addObject === 'function') {
+            map.addObject(item.marker);
+          } else if (typeof item.marker.setMap === 'function') {
+            item.marker.setMap(map);
+          }
+        } else {
+          if (typeof map.removeObject === 'function') {
+            map.removeObject(item.marker);
+          } else if (typeof item.marker.setMap === 'function') {
+            item.marker.setMap(null);
+          }
+        }
+      } catch (e) {
+        /* ignore */
+      }
     }
   });
 }
@@ -463,4 +492,238 @@ function generateDummyEvents(count) {
     });
   }
   return results;
+}
+
+/**
+ * 多言語に対応したマップ初期化ラッパー。
+ * userLang が 'zh' の場合は HERE Maps、それ以外は Google Maps を初期化します。
+ * この関数は map.html の API スクリプトにおける callback として登録されます。
+ */
+function initMap() {
+  // 多言語に対応してマップを初期化します。ここではユーザーの言語に応じて
+  // 使用するマップライブラリを切り替えます。ここで try/catch を使うのは、
+  // 外部ライブラリが読み込めない場合にフォールバック処理を行うためです。
+  try {
+    const lang = typeof getUserLang === 'function' ? getUserLang() : 'ja';
+    // 中国語モードでも Google Maps を使用します。HERE Maps は利用しません。
+    if (lang === 'zh') {
+      if (typeof initGoogleMap === 'function') {
+        initGoogleMap();
+      }
+    } else if (typeof initHereMap === 'function' && lang === 'here') {
+      // 現在は使用していませんが、将来的に別の条件で HERE を使いたい場合に備えて残してあります
+      initHereMap();
+    } else if (typeof initGoogleMap === 'function') {
+      initGoogleMap();
+    }
+  } catch (e) {
+    // 例外が発生した場合は、言語設定に応じて適切な初期化関数を呼び出します。
+    const fallbackLang = typeof getUserLang === 'function' ? getUserLang() : 'ja';
+    // フォールバック時も中国語は Google Maps を利用
+    if (fallbackLang === 'zh') {
+      if (typeof initGoogleMap === 'function') {
+        initGoogleMap();
+      }
+    } else if (typeof initHereMap === 'function' && fallbackLang === 'here') {
+      initHereMap();
+    } else if (typeof initGoogleMap === 'function') {
+      initGoogleMap();
+    }
+  }
+}
+
+// グローバルに公開
+window.initMap = initMap;
+
+/**
+ * HERE Maps の初期化関数。
+ * 中国語モードで呼び出され、HERE Maps API を用いてマップを描画します。
+ */
+function initHereMap() {
+  // ログイン状態を確認
+  if (typeof requireLogin === 'function') requireLogin();
+  // デフォルト中心（東京駅周辺）
+  const defaultCenter = { lat: 35.681236, lng: 139.767125 };
+  // イベントデータの取得
+  const localEvents = Array.isArray(window.eventsData) ? window.eventsData.slice() : [];
+  const dummyEvents = generateDummyEvents(200);
+  localEvents.push(...dummyEvents);
+  if (localEvents.length === 0) {
+    console.warn('イベントデータが空です');
+    return;
+  }
+  // HERE Platform の初期化 (API キーは開発者アカウントで取得したものに置き換えてください)
+  const apikey = 'YOUR_HERE_API_KEY';
+  const platform = new H.service.Platform({ apikey: apikey });
+  // 言語設定に応じたレイヤーを生成します。Simplified Chinese の場合は zh-CN を使用します。
+  const userLang = typeof getUserLang === 'function' ? getUserLang() : 'ja';
+  // HERE Maps API は言語コードにハイフン区切りを使用します。日本語(JA)や英語(EN)など
+  // 他の言語も指定できますが、ここでは中国語のみ特別に zh-CN を指定しています。
+  let hereLang = 'en-US';
+  if (userLang === 'zh') {
+    hereLang = 'zh-CN';
+  } else if (userLang === 'ja') {
+    hereLang = 'ja-JP';
+  } else if (userLang === 'ko') {
+    hereLang = 'ko-KR';
+  } else if (userLang === 'en') {
+    hereLang = 'en-US';
+  }
+  // createDefaultLayers に lg オプションを渡してマップタイルのラベル言語を指定します。
+  const defaultLayers = platform.createDefaultLayers({ lg: hereLang.toLowerCase() });
+  // マップインスタンス生成
+  map = new H.Map(
+    document.getElementById('map'),
+    defaultLayers.vector.normal.map,
+    {
+      center: defaultCenter,
+      zoom: 6,
+      pixelRatio: window.devicePixelRatio || 1
+    }
+  );
+  // インタラクションを有効化
+  const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+  // UI を生成。第三引数で UI のラベル言語を指定します。
+  const ui = H.ui.UI.createDefault(map, defaultLayers, hereLang);
+  // マーカーリスト初期化
+  markersList = [];
+  // カテゴリ別の色定義
+  const categoryColors = {
+    event: '#FFC72C',
+    restaurant: '#E74C3C',
+    hotel: '#8E44AD',
+    activity: '#3498DB',
+    museum: '#27AE60',
+    facility: '#95A5A6'
+  };
+  // イベントを処理してマーカーを作成
+  localEvents.forEach((eventItem, index) => {
+    // カテゴリ付与
+    if (!eventItem.category) {
+      if (index < (window.eventsData ? window.eventsData.length : 0)) {
+        eventItem.category = 'event';
+      } else {
+        const catOptions = ['restaurant','hotel','activity','museum','facility'];
+        eventItem.category = catOptions[Math.floor(Math.random() * catOptions.length)];
+      }
+    }
+    const iconColor = categoryColors[eventItem.category] || '#FFC72C';
+    // SVG マーカーアイコン。HERE Maps では SVG 文字列をそのまま渡すと URL と解釈され
+    // 不正なリクエストが発生するため、data URI としてエンコードして渡します。
+    const svgMarkup = `<?xml version="1.0" encoding="UTF-8"?>\
+<svg width="24" height="32" viewBox="-8 -20 16 20" xmlns="http://www.w3.org/2000/svg">\
+  <path d="M0,0 C8,0 8,-12 0,-20 C-8,-12 -8,0 0,0 Z" fill="${iconColor}" stroke="#1F497D" stroke-width="1"/>\
+</svg>`;
+    const dataUri = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgMarkup);
+    const icon = new H.map.Icon(dataUri);
+    const marker = new H.map.Marker({ lat: eventItem.lat, lng: eventItem.lon }, { icon: icon });
+    marker.setData(index);
+    map.addObject(marker);
+    markersList.push({ marker, category: eventItem.category });
+    marker.addEventListener('tap', function(evt) {
+      const idx = marker.getData();
+      const eItem = localEvents[idx];
+      const dateStr = eItem.date && eItem.date !== 'nan' ? `<p>${eItem.date}</p>` : '';
+      const addressStr = eItem.address && eItem.address !== 'nan' ? `<p>${eItem.address}</p>` : '';
+      const lang = typeof getUserLang === 'function' ? getUserLang() : 'ja';
+      const t = (window.translations && window.translations[lang]) || {};
+      const linkHtml = eItem.url && eItem.url !== 'nan' ? `<p><a href="${eItem.url}" target="_blank" rel="noopener">${t.view_details || '詳細を見る'}</a></p>` : '';
+      const saveLabel = t.save || '保存';
+      const saveFavorite = t.save_favorite || 'お気に入り';
+      const saveWant = t.save_want || '行ってみたい';
+      const savePlan = t.save_plan || '旅行プラン';
+      const saveStar = t.save_star || 'スター付き';
+      const contentHtml = `
+        <div class="info-content" style="position:relative;">
+          <h3 style="margin:0 0 0.2rem 0;">${eItem.name}</h3>
+          ${dateStr}
+          ${addressStr}
+          ${linkHtml}
+          <div class="save-wrapper" style="position:relative;display:inline-block;margin-top:0.5rem;">
+            <button class="save-btn" data-index="${idx}" style="background-color:transparent;border:none;color:#1F497D;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;gap:0.3rem;">
+              <span class="save-icon">🔖</span><span>${saveLabel}</span>
+            </button>
+            <div class="save-menu" style="display:none;position:absolute;top:110%;left:0;background:#fff;border:1px solid #ccc;border-radius:6px;padding:0.4rem;box-shadow:0 2px 6px rgba(0,0,0,0.2);width:130px;font-size:0.8rem;">
+              <div class="save-option" data-list="favorite" style="cursor:pointer;padding:0.2rem 0.4rem;display:flex;align-items:center;gap:0.3rem;"><span>❤️</span><span>${saveFavorite}</span></div>
+              <div class="save-option" data-list="want" style="cursor:pointer;padding:0.2rem 0.4rem;display:flex;align-items:center;gap:0.3rem;"><span>🚩</span><span>${saveWant}</span></div>
+              <div class="save-option" data-list="plan" style="cursor:pointer;padding:0.2rem 0.4rem;display:flex;align-items:center;gap:0.3rem;"><span>🧳</span><span>${savePlan}</span></div>
+              <div class="save-option" data-list="star" style="cursor:pointer;padding:0.2rem 0.4rem;display:flex;align-items:center;gap:0.3rem;"><span>⭐</span><span>${saveStar}</span></div>
+            </div>
+          </div>
+        </div>`;
+      // 既存のバブルを削除
+      ui.getBubbles().forEach(function(b) { ui.removeBubble(b); });
+      const bubble = new H.ui.InfoBubble(evt.target.getGeometry(), { content: contentHtml });
+      ui.addBubble(bubble);
+      // 翻訳とイベント設定を遅延で実行
+      setTimeout(() => {
+        const saveBtn = document.querySelector('.save-btn');
+        const saveMenu = document.querySelector('.save-menu');
+        if (saveBtn && saveMenu) {
+          saveBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            saveMenu.style.display = saveMenu.style.display === 'none' ? 'block' : 'none';
+          });
+          saveMenu.querySelectorAll('.save-option').forEach(opt => {
+            opt.addEventListener('click', (ev) => {
+              const listType = opt.getAttribute('data-list');
+              addToFavorites(eItem, listType);
+              saveMenu.style.display = 'none';
+            });
+          });
+        }
+        if (typeof applyTranslations === 'function') applyTranslations();
+      }, 0);
+    });
+  });
+
+  // すべてのマーカー追加後にビューを調整します。
+  // Google Maps と同様に、全マーカーが収まる矩形を計算して地図をフィットさせます。
+  try {
+    const lats = localEvents.map(e => parseFloat(e.lat));
+    const lngs = localEvents.map(e => parseFloat(e.lon));
+    if (lats.length > 0 && lngs.length > 0) {
+      const minLat = Math.min.apply(null, lats);
+      const maxLat = Math.max.apply(null, lats);
+      const minLng = Math.min.apply(null, lngs);
+      const maxLng = Math.max.apply(null, lngs);
+      // H.geo.Rect のコンストラクタは (top, left, bottom, right) の順です
+      const boundsRect = new H.geo.Rect(maxLat, minLng, minLat, maxLng);
+      map.getViewModel().setLookAtData({ bounds: boundsRect });
+      // 必要に応じてズーム制限をかけます
+      const maxZoom = 14;
+      if (map.getZoom() > maxZoom) {
+        map.setZoom(maxZoom);
+      }
+    }
+  } catch (err) {
+    // ビュー調整は失敗しても致命的でないため、ログに出力するだけとします
+    console.warn('Failed to fit map bounds:', err);
+  }
+  // カテゴリボタンを生成
+  createCategoryButtons();
+  // マーカー表示更新
+  updateMarkerVisibility();
+  // 周辺表示ボタンの処理
+  const resetBtn = document.getElementById('reset-view-btn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      let center = null;
+      let zoomLevel = 11;
+      try {
+        const u = JSON.parse(sessionStorage.getItem('user')) || {};
+        if (u.address && (u.address.includes('池袋') || u.address.includes('豊島区'))) {
+          center = { lat: 35.7303, lng: 139.7099 };
+          zoomLevel = 11;
+        }
+      } catch (err) { /* ignore */ }
+      if (center) {
+        map.setCenter(center);
+        map.setZoom(zoomLevel);
+      } else {
+        map.setCenter(defaultCenter);
+        map.setZoom(6);
+      }
+    });
+  }
 }
