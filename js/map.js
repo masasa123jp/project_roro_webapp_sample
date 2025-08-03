@@ -386,6 +386,15 @@ function generateDummyEvents(count) {
     if (lat > latMax) lat = latMax - Math.random() * 0.05;
     if (lng < lngMin) lng = lngMin + Math.random() * 0.05;
     if (lng > lngMax) lng = lngMax - Math.random() * 0.05;
+    // 国道16号線内に収まるようさらに範囲を絞る（東京西側の陸地）
+    const latLowerBound = 35.5;
+    const latUpperBound = 35.9;
+    const lngLowerBound = 139.2;
+    const lngUpperBound = 139.9;
+    if (lat < latLowerBound) lat = latLowerBound + Math.random() * 0.1;
+    if (lat > latUpperBound) lat = latUpperBound - Math.random() * 0.1;
+    if (lng < lngLowerBound) lng = lngLowerBound + Math.random() * 0.1;
+    if (lng > lngUpperBound) lng = lngUpperBound - Math.random() * 0.1;
     results.push({
       name: `ペット関連施設 ${i + 1}`,
       date: '',

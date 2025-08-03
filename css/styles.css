@@ -245,8 +245,9 @@ h2, h3, h4 {
 }
 
 .bottom-nav .nav-item.active {
-  /* アクティブ時は柔らかいパステルグリーンで表示 */
+  /* アクティブ時は文字色のみ変更し、背景色を塗りつぶさない */
   color: #45c397;
+  background-color: transparent;
 }
 
 .bottom-nav .nav-item.active img {
@@ -464,7 +465,8 @@ h2, h3, h4 {
 #dify-chat .chat-messages {
   flex: 1;
   /* チャットボックスの高さを広げて入力エリアの窮屈さを解消 */
-  max-height: 450px;
+  /* チャット表示エリアの高さを拡大 */
+  max-height: 600px;
   overflow-y: auto;
   padding-right: 0.5rem;
 }
@@ -556,10 +558,16 @@ h2, h3, h4 {
   background-color: #F9E9F3;
   border-radius: var(--border-radius);
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-  overflow-y: auto;
+  /* 雑誌ページ全体のスクロールを無効にする */
+  overflow: hidden;
   backface-visibility: hidden;
   transform-origin: left;
   transition: transform 0.8s ease;
+}
+
+/* 背表紙はクリック無効化 */
+.magazine-viewer .book .page.back-cover {
+  pointer-events: none;
 }
 .magazine-viewer .book .page.flipped {
   transform: rotateY(-180deg);
@@ -573,12 +581,13 @@ h2, h3, h4 {
 }
 /* 雑誌ページのフォントサイズを調整して読みやすくする */
 .magazine-viewer .page-content h3 {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
+/* 段落やリスト項目の文字サイズを大きくして読みやすく */
 .magazine-viewer .page-content p,
 .magazine-viewer .page-content li {
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
 .magazine-viewer .nav-arrow {
   position: absolute;

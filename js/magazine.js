@@ -52,18 +52,19 @@ document.addEventListener('DOMContentLoaded', () => {
         {
           html: `
             <div style="display:flex;flex-direction:column;height:100%;">
-              <img src="images/cover_dog.png" alt="cover" style="width:100%;height:50%;object-fit:cover;">
-              <div style="padding:0.5rem;text-align:center;">
-                <h2 style="margin:0;color:#1F497D;">2025年6月号</h2>
-                <h3 style="margin:0.3rem 0;color:#e67a8a;font-size:1.1rem;">犬と梅雨のおうち時間</h3>
-                <p style="font-size:0.9rem;">雨の日でも犬と楽しく過ごせる特集</p>
+              <!-- 新しい雑誌表紙：添付デザインを使用 -->
+              <img src="images/magazine_cover1.png" alt="cover" style="width:100%;height:65%;object-fit:cover;border-radius:8px;">
+              <div style="padding:0.3rem;text-align:center;">
+                <h2 style="margin:0;color:#1F497D;" data-i18n-key="mag_issue_june">2025年6月号</h2>
+                <h3 style="margin:0.2rem 0;color:#e67a8a;font-size:1.3rem;" data-i18n-key="mag_theme_june">犬と梅雨のおうち時間</h3>
+                <p style="font-size:1.0rem;" data-i18n-key="mag_desc_june">雨の日でも犬と楽しく過ごせる特集</p>
               </div>
             </div>
           `
         },
         {
           html: `
-            <h3 style="color:#1F497D;">今月のイベント</h3>
+            <h3 style="color:#1F497D;" data-i18n-key="mag_event_title">今月のイベント</h3>
             <ul style="list-style-type:disc;padding-left:1.2rem;font-size:0.9rem;">
               <li>6/12 オンラインヨガ with ワンちゃん</li>
               <li>6/26 室内ドッグラン・オフ会</li>
@@ -74,19 +75,19 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
           html: `
-            <h3 style="color:#1F497D;">おすすめカフェ</h3>
+            <h3 style="color:#1F497D;" data-i18n-key="mag_cafe_title">おすすめカフェ</h3>
             <p style="font-size:0.9rem;">池袋にある室内ドッグカフェ「Rainy&nbsp;Days」。ガラス張りの店内は明るく、ワンちゃん用メニューも充実しています。雨の日でも一緒にゆったりカフェタイムが楽しめます。</p>
           `
         },
         {
           html: `
-            <h3 style="color:#1F497D;">プチコラム：梅雨の運動不足解消法</h3>
+            <h3 style="color:#1F497D;" data-i18n-key="mag_column_june">プチコラム：梅雨の運動不足解消法</h3>
             <p style="font-size:0.9rem;">梅雨の時期はお外に出られず犬も運動不足になりがち。室内で楽しめるおもちゃやトリック練習でストレス発散しましょう。簡単な隠れんぼや知育玩具もおすすめです。</p>
           `
         },
         {
           html: `
-            <h3 style="color:#1F497D;">ちぃまめのおすすめ</h3>
+            <h3 style="color:#1F497D;" data-i18n-key="mag_recommend_title">ちぃまめのおすすめ</h3>
             <p style="font-size:0.9rem;">雨の日のお出かけには防水グッズが必須！</p>
             <div style="display:flex;gap:0.5rem;align-items:flex-start;margin-bottom:0.5rem;">
               <img src="images/product_raincoat_boots.png" alt="レインコート" style="width:40%;max-height:120px;object-fit:contain;border-radius:8px;">
@@ -108,14 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
           html: `
-            <h3 style="color:#1F497D;">ちぃまめの防災アドバイス</h3>
+            <h3 style="color:#1F497D;" data-i18n-key="mag_disaster_title">ちぃまめの防災アドバイス</h3>
             <img src="images/chiamame_disaster.png" alt="防災" style="width:100%;max-height:250px;object-fit:contain;margin-bottom:0.5rem;">
             <p style="font-size:0.9rem;">ちぃまめから、小さな命を守るための防災アドバイス！避難用のバッグにはフード・水・トイレ用品を忘れずに。</p>
           `
         },
         {
           html: `
-            <h3 style="color:#1F497D;">ワンポイントアドバイス</h3>
+            <h3 style="color:#1F497D;" data-i18n-key="mag_advice_title">ワンポイントアドバイス</h3>
             <div style="display:flex;gap:0.5rem;align-items:flex-start;">
               <img src="images/chiamame_mascot.png" alt="ちぃまめ" style="width:35%;max-height:150px;object-fit:contain;">
               <div style="flex:1;font-size:0.9rem;">
@@ -160,19 +161,19 @@ document.addEventListener('DOMContentLoaded', () => {
         {
           html: `
             <div style="display:flex;flex-direction:column;height:100%;">
-              <!-- 7月号表紙はリアルな柴犬の写真を使用し、夏のおでかけをイメージ -->
-              <img src="images/realistic_shiba_hat.png" alt="cover" style="width:100%;height:50%;object-fit:cover;">
-              <div style="padding:0.5rem;text-align:center;">
-                <h2 style="margin:0;color:#1F497D;">2025年7月号</h2>
-                <h3 style="margin:0.3rem 0;color:#e67a8a;font-size:1.1rem;">犬と夏のおでかけ × UVケア</h3>
-                <p style="font-size:0.9rem;">紫外線対策とワンちゃんとのおでかけスポットをご紹介♪</p>
+              <!-- 7月号表紙は添付のかわいい犬のビーチ写真を使用し、夏のおでかけをイメージ -->
+              <img src="images/magazine_cover2.png" alt="cover" style="width:100%;height:65%;object-fit:cover;border-radius:8px;">
+              <div style="padding:0.4rem;text-align:center;">
+                <h2 style="margin:0;color:#1F497D;" data-i18n-key="mag_issue_july">2025年7月号</h2>
+                <h3 style="margin:0.3rem 0;color:#e67a8a;font-size:1.3rem;" data-i18n-key="mag_theme_july">犬と夏のおでかけ × UVケア</h3>
+                <p style="font-size:1.0rem;" data-i18n-key="mag_desc_july">紫外線対策とワンちゃんとのおでかけスポットをご紹介♪</p>
               </div>
             </div>
           `
         },
         {
           html: `
-            <h3 style="color:#1F497D;">今月のイベント</h3>
+            <h3 style="color:#1F497D;" data-i18n-key="mag_event_title">今月のイベント</h3>
             <ul style="list-style-type:disc;padding-left:1.2rem;font-size:0.9rem;">
               <li>7/12 代々木公園「サマーフェス」</li>
               <li>7/20 ワンちゃんOKビーチクリーン</li>
@@ -183,19 +184,19 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
           html: `
-            <h3 style="color:#1F497D;">おすすめカフェ</h3>
+            <h3 style="color:#1F497D;" data-i18n-key="mag_cafe_title">おすすめカフェ</h3>
             <p style="font-size:0.9rem;">代官山にあるドッグカフェ「Cafe&nbsp;Lily」。木漏れ日のテラス席はワンちゃん同伴OK。ヘルシーなランチと特製スイーツでリラックスしたひとときを過ごせます。</p>
           `
         },
         {
           html: `
-            <h3 style="color:#1F497D;">プチコラム：夏のUV対策</h3>
+            <h3 style="color:#1F497D;" data-i18n-key="mag_column_july">プチコラム：夏のUV対策</h3>
             <p style="font-size:0.9rem;">夏は紫外線が強く、ワンちゃんも日焼けします。散歩は朝夕の涼しい時間帯に。帽子やウェアでしっかりガードして、肉球の火傷にも注意しましょう。</p>
           `
         },
         {
           html: `
-            <h3 style="color:#1F497D;">ちぃまめのおすすめ</h3>
+            <h3 style="color:#1F497D;" data-i18n-key="mag_recommend_title">ちぃまめのおすすめ</h3>
             <p style="font-size:0.9rem;">夏のおでかけには涼感グッズが必須！</p>
             <div style="display:flex;gap:0.5rem;align-items:flex-start;margin-bottom:0.5rem;">
               <img src="images/product_uv_clothes.png" alt="UVカット服" style="width:40%;max-height:120px;object-fit:contain;border-radius:8px;">
@@ -217,14 +218,14 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
           html: `
-            <h3 style="color:#1F497D;">ワンちゃんとくつろげるカフェ</h3>
+            <h3 style="color:#1F497D;" data-i18n-key="mag_relax_cafe_title">ワンちゃんとくつろげるカフェ</h3>
             <img src="images/pet_cafe.png" alt="カフェ" style="width:100%;max-height:250px;object-fit:cover;border-radius:8px;margin-bottom:0.5rem;">
             <p style="font-size:0.9rem;">涼しいカフェで犬と一緒に過ごすなら、落ち着いたインテリアと犬用メニューが揃ったお店がおすすめ。</p>
           `
         },
         {
           html: `
-            <h3 style="color:#1F497D;">ワンポイントアドバイス</h3>
+            <h3 style="color:#1F497D;" data-i18n-key="mag_advice_title">ワンポイントアドバイス</h3>
             <div style="display:flex;gap:0.5rem;align-items:flex-start;">
               <img src="images/chiamame_mascot.png" alt="ちぃまめ" style="width:35%;max-height:150px;object-fit:contain;">
               <div style="flex:1;font-size:0.9rem;">
@@ -319,6 +320,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const page = document.createElement('div');
       page.className = 'page';
       page.dataset.index = i;
+      // 背表紙（最後のページ）はクリックを無効化するためクラスを追加
+      if (i === total - 1) {
+        page.classList.add('back-cover');
+      }
       // 最初のページを一番上に、最後のページを一番下にする
       // 例: total=5 の場合、i=4→zIndex=1, i=3→2, ..., i=0→5
       page.style.zIndex = (total - i);

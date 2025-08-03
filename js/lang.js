@@ -38,6 +38,22 @@ const translations = {
     send: '送信',
     chat_placeholder: 'メッセージを入力...',
     reset_view: '周辺表示'
+    ,
+    /* Magazine specific translations */
+    mag_issue_june: '2025年6月号',
+    mag_theme_june: '犬と梅雨のおうち時間',
+    mag_desc_june: '雨の日でも犬と楽しく過ごせる特集',
+    mag_issue_july: '2025年7月号',
+    mag_theme_july: '犬と夏のおでかけ × UVケア',
+    mag_desc_july: '紫外線対策とワンちゃんとのおでかけスポットをご紹介♪',
+    mag_event_title: '今月のイベント',
+    mag_cafe_title: 'おすすめカフェ',
+    mag_column_june: 'プチコラム：梅雨の運動不足解消法',
+    mag_column_july: 'プチコラム：夏のUV対策',
+    mag_recommend_title: 'ちぃまめのおすすめ',
+    mag_disaster_title: 'ちぃまめの防災アドバイス',
+    mag_advice_title: 'ワンポイントアドバイス',
+    mag_relax_cafe_title: 'ワンちゃんとくつろげるカフェ'
   },
   en: {
     nav_map: 'Map',
@@ -68,6 +84,22 @@ const translations = {
     send: 'Send',
     chat_placeholder: 'Enter your message...',
     reset_view: 'Reset View'
+    ,
+    /* Magazine translations */
+    mag_issue_june: 'June 2025 Issue',
+    mag_theme_june: 'Indoor Fun with Dogs in the Rainy Season',
+    mag_desc_june: 'A special feature on enjoying rainy days with your dog',
+    mag_issue_july: 'July 2025 Issue',
+    mag_theme_july: 'Summer Outings × UV Care',
+    mag_desc_july: 'Introducing UV protection and dog-friendly outing spots',
+    mag_event_title: 'Events This Month',
+    mag_cafe_title: 'Recommended Café',
+    mag_column_june: 'Mini Column: Exercise in the Rainy Season',
+    mag_column_july: 'Mini Column: Summer UV Protection',
+    mag_recommend_title: "Chiamame's Recommendations",
+    mag_disaster_title: "Chiamame's Disaster Advice",
+    mag_advice_title: 'One-Point Advice',
+    mag_relax_cafe_title: 'Cafés to Relax with Your Dog'
   },
   zh: {
     nav_map: '地图',
@@ -98,6 +130,22 @@ const translations = {
     send: '发送',
     chat_placeholder: '输入您的信息...',
     reset_view: '重置视图'
+    ,
+    /* 杂志相关翻译 */
+    mag_issue_june: '2025年6月刊',
+    mag_theme_june: '雨季与狗狗的室内时光',
+    mag_desc_june: '雨天也能与爱犬一起享受的特辑',
+    mag_issue_july: '2025年7月刊',
+    mag_theme_july: '夏日出游 × 防晒护理',
+    mag_desc_july: '介绍防紫外线和宠物友好出游地点',
+    mag_event_title: '本月活动',
+    mag_cafe_title: '推荐咖啡馆',
+    mag_column_june: '小专栏：雨季运动不足的解决方法',
+    mag_column_july: '小专栏：夏季防晒',
+    mag_recommend_title: 'ちぃまめ推荐',
+    mag_disaster_title: 'ちぃまめ的防灾建议',
+    mag_advice_title: '小贴士',
+    mag_relax_cafe_title: '与爱犬共度的休闲咖啡馆'
   },
   ko: {
     nav_map: '지도',
@@ -128,6 +176,22 @@ const translations = {
     send: '보내기',
     chat_placeholder: '메시지를 입력하세요...',
     reset_view: '주변 표시'
+    ,
+    /* 잡지 관련 번역 */
+    mag_issue_june: '2025년 6월호',
+    mag_theme_june: '장마철 반려견과 실내 생활',
+    mag_desc_june: '비 오는 날에도 반려견과 즐겁게 지낼 수 있는 특집',
+    mag_issue_july: '2025년 7월호',
+    mag_theme_july: '여름 나들이 × 자외선 케어',
+    mag_desc_july: '자외선 대책과 반려견과 함께할 수 있는 나들이 장소 소개',
+    mag_event_title: '이번 달 이벤트',
+    mag_cafe_title: '추천 카페',
+    mag_column_june: '미니 칼럼: 장마철 운동 부족 해소법',
+    mag_column_july: '미니 칼럼: 여름 자외선 대책',
+    mag_recommend_title: '치마메 추천',
+    mag_disaster_title: '치마메의 재난 대비 팁',
+    mag_advice_title: '한 포인트 조언',
+    mag_relax_cafe_title: '반려견과 함께 쉬어갈 수 있는 카페'
   }
 };
 
