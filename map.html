@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="css/styles.css" />
     <!-- Favicon -->
     <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+    <!-- Map API keys (base64 encoded). These meta tags are consumed by the loading script below and by map.js. -->
+    <meta name="google-maps-api-key" content="{{GOOGLE_MAPS_API_KEY_BASE64}}" />
+    <meta name="here-api-key" content="{{HERE_API_KEY_BASE64}}" />
   </head>
   <body class="map-page">
     <header class="app-header">
@@ -52,26 +55,60 @@
       (function() {
         // 現在の言語設定を取得
         var lang = localStorage.getItem('userLang') || 'ja';
-        // Google Maps API を言語ごとに読み込みます。中国語モードも Google Maps を使用します。
-        var regionMap = {
-          ja: 'JP',
-          en: 'US',
-          zh: 'CN',
-          ko: 'KR'
-        };
-        var region = regionMap[lang] || 'JP';
-        // Google Maps の言語コードは zh-CN / ja / en / ko などになります。
-        var langParam = lang === 'zh' ? 'zh-CN' : lang;
-        var script = document.createElement('script');
-        script.src =
-          'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE' +
-          '&callback=initMap' +
-          '&language=' + encodeURIComponent(langParam) +
-          '&region=' + encodeURIComponent(region) +
-          '&loading=async';
-        script.async = true;
-        script.defer = true;
-        document.head.appendChild(script);
+        if (lang === 'zh') {
+          // 中国語の場合は HERE Maps のライブラリを読み込む
+          var hereScripts = [
+            'https://js.api.here.com/v3/3.1/mapsjs-core.js',
+            'https://js.api.here.com/v3/3.1/mapsjs-service.js',
+            'https://js.api.here.com/v3/3.1/mapsjs-ui.js',
+            'https://js.api.here.com/v3/3.1/mapsjs-mapevents.js'
+          ];
+          var loadedCount = 0;
+          hereScripts.forEach(function(src) {
+            var s = document.createElement('script');
+            s.src = src;
+            s.async = true;
+            s.defer = true;
+            s.onload = function() {
+              loadedCount++;
+              if (loadedCount === hereScripts.length) {
+                // 全ての HERE ライブラリ読み込み後にマップ初期化
+                if (typeof window.initMap === 'function') window.initMap();
+              }
+            };
+            document.head.appendChild(s);
+          });
+        } else {
+          // Google Maps を読み込む
+          var regionMap = {
+            ja: 'JP',
+            en: 'US',
+            zh: 'JP',
+            ko: 'KR'
+          };
+          var region = regionMap[lang] || 'JP';
+          // 言語コードは zh の場合 zh-CN を使用
+          var langParam = (lang === 'zh' ? 'zh-CN' : lang);
+          // meta タグから base64 エンコードされた API キーを取得
+          var metaGoogle = document.querySelector('meta[name="google-maps-api-key"]');
+          var apiKey = '';
+          if (metaGoogle && metaGoogle.getAttribute('content')) {
+            try {
+              apiKey = atob(metaGoogle.getAttribute('content'));
+            } catch (e) {
+              apiKey = metaGoogle.getAttribute('content');
+            }
+          }
+          var script = document.createElement('script');
+          script.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(apiKey) +
+            '&callback=initMap' +
+            '&language=' + encodeURIComponent(langParam) +
+            '&region=' + encodeURIComponent(region) +
+            '&loading=async';
+          script.async = true;
+          script.defer = true;
+          document.head.appendChild(script);
+        }
       })();
     </script>
   </body>

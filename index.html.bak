@@ -3,13 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- API keys and OAuth identifiers (base64-encoded) -->
-    <!-- 本番環境では環境変数からエンコードした値に置き換えてください -->
-    <meta name="google-oauth-client-id" content="{{GOOGLE_OAUTH_CLIENT_ID_BASE64}}" />
-    <meta name="line-liff-id" content="{{LINE_LIFF_ID_BASE64}}" />
-    <!-- API keys for map providers (base64-encoded). These are consumed in map.html. -->
-    <meta name="google-maps-api-key" content="{{GOOGLE_MAPS_API_KEY_BASE64}}" />
-    <meta name="here-api-key" content="{{HERE_API_KEY_BASE64}}" />
     <!--
       index.html – ログイン画面
 
@@ -26,18 +19,6 @@
     <link rel="stylesheet" href="css/styles.css" />
     <!-- Favicon -->
     <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-
-    <!--
-      Google Identity Services and LINE LIFF SDK
-
-      このアプリではソーシャルログインを実装するために、Google Identity Services
-      および LINE Front‑end Framework (LIFF) を読み込みます。実際に動作させる
-      ためにはそれぞれのプラットフォームでクライアントIDやLIFF IDを取得し、
-      その値を上記の meta タグに base64 形式で埋め込んでください。キーは
-      ハードコーディングせず、デプロイ環境の環境変数を経由して注入します。
-    -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   </head>
   <body class="login-page">
     <header>
