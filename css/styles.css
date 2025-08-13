@@ -626,6 +626,38 @@ h2, h3, h4 {
   gap: 0.5rem;
 }
 
+/*
+  外部チャットコンテナ
+
+  Udify など外部サービスのチャット画面を iframe として取り込む際のスタイルです。
+  従来のチャットボックスと同じような見た目になるよう、背景色・余白・角丸などを揃えています。
+*/
+.external-chat-container {
+  background-color: #ffffff;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  /*
+    画面下半分が余白にならないように、外部チャットの表示領域の高さを
+    ビューポートの高さからヘッダーや説明文、ナビゲーションを差し引いて計算します。
+    ここではおおよそ120pxをヘッダー＋説明文として見込み、
+    ボトムナビの高さは CSS 変数 --nav-height を利用します。
+  */
+  height: calc(100vh - var(--nav-height) - 220px);
+}
+
+.external-chat-container iframe {
+  /* 幅いっぱいに広げ、高さは状況に応じて変えられるよう自動伸縮 */
+  width: 100%;
+  flex: 1;
+  border: none;
+  border-radius: var(--border-radius);
+  /* スクロールを iframe 内で行い、外側にはスクロールバーを出さない */
+  overflow: hidden;
+}
+
 #dify-chat .chat-messages {
   flex: 1;
   /* チャットボックスの高さを広げて入力エリアの窮屈さを解消 */

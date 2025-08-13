@@ -16,9 +16,15 @@
     <link rel="stylesheet" href="css/styles.css" />
     <!-- Favicon -->
     <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-    <!-- Map API keys (base64 encoded). These meta tags are consumed by the loading script below and by map.js. -->
-    <meta name="google-maps-api-key" content="{{GOOGLE_MAPS_API_KEY_BASE64}}" />
-    <meta name="here-api-key" content="{{HERE_API_KEY_BASE64}}" />
+    <!--
+      Map API キーの取得を .htaccess / Apache 設定ファイルから行うように変更しました。
+      Server Side Includes (SSI) を利用して環境変数の値を meta タグに埋め込みます。
+      .htaccess で SetEnv ディレクティブを用いて GOOGLE_MAPS_API_KEY および HERE_API_KEY
+      を定義してください。ブラウザにはキーが平文で出力されますが、ソースコードには残らないため
+      リポジトリ内にハードコーディングされることはありません。
+    -->
+    <meta name="google-maps-api-key" content="<!--#echo var='GOOGLE_MAPS_API_KEY' -->" />
+    <meta name="here-api-key" content="<!--#echo var='HERE_API_KEY' -->" />
   </head>
   <body class="map-page">
     <header class="app-header">
@@ -91,14 +97,8 @@
           var langParam = (lang === 'zh' ? 'zh-CN' : lang);
           // meta タグから base64 エンコードされた API キーを取得
           var metaGoogle = document.querySelector('meta[name="google-maps-api-key"]');
-          var apiKey = '';
-          if (metaGoogle && metaGoogle.getAttribute('content')) {
-            try {
-              apiKey = atob(metaGoogle.getAttribute('content'));
-            } catch (e) {
-              apiKey = metaGoogle.getAttribute('content');
-            }
-          }
+          // APIキーは .htaccess の環境変数から直接 meta タグに埋め込まれるので、そのまま取得します。
+          var apiKey = metaGoogle && metaGoogle.getAttribute('content') ? metaGoogle.getAttribute('content') : '';
           var script = document.createElement('script');
           script.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(apiKey) +
             '&callback=initMap' +

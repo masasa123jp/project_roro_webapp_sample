@@ -500,15 +500,35 @@ function generateDummyEvents(count) {
  * この関数は map.html の API スクリプトにおける callback として登録されます。
  */
 function initMap() {
+  // 多言語に対応してマップを初期化します。ここではユーザーの言語に応じて
+  // 使用するマップライブラリを切り替えます。ここで try/catch を使うのは、
+  // 外部ライブラリが読み込めない場合にフォールバック処理を行うためです。
   try {
     const lang = typeof getUserLang === 'function' ? getUserLang() : 'ja';
-    if (lang === 'zh' && typeof initHereMap === 'function') {
+    // 中国語モードでも Google Maps を使用します。HERE Maps は利用しません。
+    if (lang === 'zh') {
+      if (typeof initGoogleMap === 'function') {
+        initGoogleMap();
+      }
+    } else if (typeof initHereMap === 'function' && lang === 'here') {
+      // 現在は使用していませんが、将来的に別の条件で HERE を使いたい場合に備えて残してあります
       initHereMap();
     } else if (typeof initGoogleMap === 'function') {
       initGoogleMap();
     }
   } catch (e) {
-    if (typeof initGoogleMap === 'function') initGoogleMap();
+    // 例外が発生した場合は、言語設定に応じて適切な初期化関数を呼び出します。
+    const fallbackLang = typeof getUserLang === 'function' ? getUserLang() : 'ja';
+    // フォールバック時も中国語は Google Maps を利用
+    if (fallbackLang === 'zh') {
+      if (typeof initGoogleMap === 'function') {
+        initGoogleMap();
+      }
+    } else if (typeof initHereMap === 'function' && fallbackLang === 'here') {
+      initHereMap();
+    } else if (typeof initGoogleMap === 'function') {
+      initGoogleMap();
+    }
   }
 }
 
@@ -583,12 +603,14 @@ function initHereMap() {
       }
     }
     const iconColor = categoryColors[eventItem.category] || '#FFC72C';
-    // SVG マーカーアイコン
+    // SVG マーカーアイコン。HERE Maps では SVG 文字列をそのまま渡すと URL と解釈され
+    // 不正なリクエストが発生するため、data URI としてエンコードして渡します。
     const svgMarkup = `<?xml version="1.0" encoding="UTF-8"?>\
 <svg width="24" height="32" viewBox="-8 -20 16 20" xmlns="http://www.w3.org/2000/svg">\
   <path d="M0,0 C8,0 8,-12 0,-20 C-8,-12 -8,0 0,0 Z" fill="${iconColor}" stroke="#1F497D" stroke-width="1"/>\
 </svg>`;
-    const icon = new H.map.Icon(svgMarkup);
+    const dataUri = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgMarkup);
+    const icon = new H.map.Icon(dataUri);
     const marker = new H.map.Marker({ lat: eventItem.lat, lng: eventItem.lon }, { icon: icon });
     marker.setData(index);
     map.addObject(marker);
@@ -649,6 +671,30 @@ function initHereMap() {
       }, 0);
     });
   });
+
+  // すべてのマーカー追加後にビューを調整します。
+  // Google Maps と同様に、全マーカーが収まる矩形を計算して地図をフィットさせます。
+  try {
+    const lats = localEvents.map(e => parseFloat(e.lat));
+    const lngs = localEvents.map(e => parseFloat(e.lon));
+    if (lats.length > 0 && lngs.length > 0) {
+      const minLat = Math.min.apply(null, lats);
+      const maxLat = Math.max.apply(null, lats);
+      const minLng = Math.min.apply(null, lngs);
+      const maxLng = Math.max.apply(null, lngs);
+      // H.geo.Rect のコンストラクタは (top, left, bottom, right) の順です
+      const boundsRect = new H.geo.Rect(maxLat, minLng, minLat, maxLng);
+      map.getViewModel().setLookAtData({ bounds: boundsRect });
+      // 必要に応じてズーム制限をかけます
+      const maxZoom = 14;
+      if (map.getZoom() > maxZoom) {
+        map.setZoom(maxZoom);
+      }
+    }
+  } catch (err) {
+    // ビュー調整は失敗しても致命的でないため、ログに出力するだけとします
+    console.warn('Failed to fit map bounds:', err);
+  }
   // カテゴリボタンを生成
   createCategoryButtons();
   // マーカー表示更新

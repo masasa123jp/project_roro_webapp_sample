@@ -33,7 +33,8 @@ const translations = {
     logout: 'ログアウト',
     no_favorites: 'お気に入りがまだありません。',
     delete: '削除',
-    ai_intro: '以下のチャットボックスでは、DifyのAIアシスタントと対話することができます。ペットのイベント情報やおすすめスポットなど、気になることを気軽に質問してみましょう。',
+    // dify.html で外部AIチャットウィンドウを埋め込むようにしたため説明文を更新
+    ai_intro: 'AIアシスタントにペットの気になることを気軽に質問してみましょう。',
     ai_note: '※このチャットはモックアップです。実際のAI連携にはDifyが提供するスクリプトを読み込んでください。',
     send: '送信',
     chat_placeholder: 'メッセージを入力...',
@@ -107,7 +108,8 @@ const translations = {
     logout: 'Logout',
     no_favorites: 'No favorites yet.',
     delete: 'Remove',
-    ai_intro: 'You can chat with our AI assistant. Feel free to ask about pet events and recommended spots.',
+    // updated description for external AI assistant window
+    ai_intro: 'You can chat with our external AI assistant in the window below. Feel free to ask the AI assistant any questions you have about your pet.',
     ai_note: '*This chat is a mockup. Please load the official Dify script for real AI integration.',
     send: 'Send',
     chat_placeholder: 'Enter your message...',
@@ -181,7 +183,8 @@ const translations = {
     logout: '退出登录',
     no_favorites: '暂无收藏。',
     delete: '删除',
-    ai_intro: '您可以在此与AI助手聊天，咨询宠物活动和推荐地点等。',
+    // 更新説明：外部AIチャットウィンドウに対応
+    ai_intro: '您可以在下方窗口中与我们的外部 AI 助手聊天。您可以随时向 AI 助手询问任何有关宠物的问题。',
     ai_note: '*该聊天为模型展示。要启用真正的AI功能，请加载Dify官方脚本。',
     send: '发送',
     chat_placeholder: '输入您的信息...',
@@ -231,6 +234,7 @@ const translations = {
     ,login_no_account: '如果您没有账户'
     ,login_register_link: '请点击这里注册'
   },
+  // Korean translation
   ko: {
     nav_map: '지도',
     nav_ai: 'AI',
@@ -255,7 +259,8 @@ const translations = {
     logout: '로그아웃',
     no_favorites: '즐겨찾기가 없습니다.',
     delete: '삭제',
-    ai_intro: '이 채팅 박스에서 AI 어시스턴트와 대화할 수 있습니다. 반려동물 이벤트와 추천 장소에 대해 문의하세요.',
+    // dify.html の変更に合わせて、外部AIチャットウィンドウを案内する文言に修正
+    ai_intro: '아래 창에서 외부 AI 비서와 채팅하실 수 있습니다. AI 비서에게 반려동물에 대한 모든 질문을 언제든지 물어보실 수 있습니다.',
     ai_note: '*이 채팅은 목업입니다. 실제 AI 연동은 Dify가 제공하는 스크립트를 로드하세요.',
     send: '보내기',
     chat_placeholder: '메시지를 입력하세요...',
